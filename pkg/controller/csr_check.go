@@ -251,6 +251,7 @@ func authorizeNodeClientCSR(c client.Client, machines []machinev1.Machine, req *
 		return false, nil
 	}
 
+	/*
 	nodeMachine, ok := findMatchingMachineFromInternalDNS(nodeName, machines)
 	if !ok {
 		//TODO: set annotation/emit event here.
@@ -271,6 +272,7 @@ func authorizeNodeClientCSR(c client.Client, machines []machinev1.Machine, req *
 		klog.Errorf("%v: CSR creation time %s not in range (%s, %s)", req.Name, req.CreationTimestamp.Time, start, end)
 		return false, nil
 	}
+	*/
 
 	return true, nil // approve node client cert
 }
@@ -464,10 +466,8 @@ func findMatchingMachineFromNodeRef(nodeName string, machines []machinev1.Machin
 }
 
 func findMatchingMachineFromInternalDNS(nodeName string, machines []machinev1.Machine) (machinev1.Machine, bool) {
-	klog.Infof("=====debug begin====\nmachines: %v\n=====debug end====\n", machines)
 	for _, machine := range machines {
 		for _, address := range machine.Status.Addresses {
-			klog.Infof("=====debug begin====\naddress.Address: %v\nnodeName: %v\n=====debug end====\n", address.Address, nodeName)
 			if address.Type == corev1.NodeInternalDNS && address.Address == nodeName {
 				return machine, true
 			}
